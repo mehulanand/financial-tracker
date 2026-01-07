@@ -2,6 +2,7 @@ const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 const authMiddleware = require('../middleware/auth');
 const { updatePrices } = require('../services/PriceFetcher');
+const { backfillHistoricalData } = require('../services/HistoricalDataFetcher');
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -40,6 +41,11 @@ router.post('/', authMiddleware, async (req, res) => {
 
         // Trigger an immediate price update check
         updatePrices();
+
+        // Backfill historical data (async, don't wait for it)
+        backfillHistoricalData(newAsset, 30).catch(err =>
+            console.error('Historical backfill error:', err.message)
+        );
 
         res.status(201).json(newAsset);
     } catch (err) {

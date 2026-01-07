@@ -3,3 +3,10 @@ psql 'postgresql://neondb_owner:npg_oV2NfXmv8KlI@ep-hidden-sea-a16yzph5-pooler.a
 
 
 jwt secret key JGQEosfYKVzgLZASwuQn4R6M
+
+finhub key d5dko7pr01qur4ist1f0d5dko7pr01qur4ist1fg
+
+https://financial-tracker-api-27ke.onrender.com
+
+anandparamehul@gmail.com
+Aashi@20
