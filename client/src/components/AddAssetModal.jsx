@@ -139,7 +139,7 @@ export default function AddAssetModal({ onClose, onAdd }) {
                     </div>
 
                     {!isCustom ? (
-                        <div>
+                        <div className="relative">
                             <label className="block text-gray-400 mb-1">Search Asset</label>
                             <input
                                 className="w-full bg-gray-900 border border-gray-700 p-2 rounded text-white mb-2 focus:border-emerald-500 focus:outline-none"
@@ -148,35 +148,42 @@ export default function AddAssetModal({ onClose, onAdd }) {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
 
-                            <div className="max-h-40 overflow-y-auto border border-gray-700 rounded bg-gray-900 absolute w-full left-0 z-10 shadow-lg">
-                                {getFilteredList().length > 0 ? (
-                                    getFilteredList().map(item => (
-                                        <div
-                                            key={item.id || item.symbol}
-                                            onClick={() => handleSelect(item.id || item.symbol)}
-                                            className="p-2 hover:bg-emerald-600 cursor-pointer text-white border-b border-gray-800 last:border-none"
-                                        >
-                                            <span className="font-bold mr-2">{item.symbol || item.id.toUpperCase()}</span>
-                                            <span className="text-gray-400 text-sm">{item.name}</span>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <div className="p-2 text-gray-500">No results found.</div>
-                                )}
-                                <div
-                                    onClick={() => { setIsCustom(true); setSymbol(''); setName(''); }}
-                                    className="p-2 bg-gray-800 hover:bg-gray-700 cursor-pointer text-emerald-400 font-semibold border-t border-gray-700"
-                                >
-                                    + Add Custom Asset Manually
-                                </div>
-                            </div>
-
-                            {/* Hidden select for compatibility or just visual feedback of selection */}
-                            {symbol && (
-                                <div className="mt-2 p-2 bg-emerald-900/30 border border-emerald-500/50 rounded text-emerald-200">
-                                    Selected: <b>{symbol}</b>
+                            {/* Only show dropdown when user is typing */}
+                            {searchQuery && (
+                                <div className="max-h-40 overflow-y-auto border border-gray-700 rounded bg-gray-900 shadow-lg mt-1">
+                                    {getFilteredList().length > 0 ? (
+                                        getFilteredList().map(item => (
+                                            <div
+                                                key={item.id || item.symbol}
+                                                onClick={() => handleSelect(item.id || item.symbol)}
+                                                className="p-2 hover:bg-emerald-600 cursor-pointer text-white border-b border-gray-800 last:border-none"
+                                            >
+                                                <span className="font-bold mr-2">{item.symbol || item.id.toUpperCase()}</span>
+                                                <span className="text-gray-400 text-sm">{item.name}</span>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="p-2 text-gray-500">No results found.</div>
+                                    )}
                                 </div>
                             )}
+
+                            {/* Show selected asset */}
+                            {symbol && (
+                                <div className="p-3 bg-emerald-900/30 border border-emerald-500/50 rounded text-emerald-200 mb-2">
+                                    <div className="font-semibold">Selected: {symbol.toUpperCase()}</div>
+                                    <div className="text-sm text-emerald-300">{name}</div>
+                                </div>
+                            )}
+
+                            {/* Custom asset button */}
+                            <button
+                                type="button"
+                                onClick={() => { setIsCustom(true); setSymbol(''); setName(''); }}
+                                className="text-sm text-emerald-400 hover:text-emerald-300 underline"
+                            >
+                                + Add Custom Asset Manually
+                            </button>
                         </div>
                     ) : (
                         <>
