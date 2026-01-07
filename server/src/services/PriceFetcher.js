@@ -79,7 +79,11 @@ const updatePrices = async () => {
                 if (price) await processPriceUpdate(asset, price);
             }
         } catch (err) {
-            console.error('Error fetching crypto batch:', err.message);
+            if (err.response?.status === 429) {
+                console.warn('⚠️  CoinGecko rate limit reached (429). Skipping crypto update this cycle.');
+            } else {
+                console.error('Error fetching crypto batch:', err.message);
+            }
         }
     }
 
