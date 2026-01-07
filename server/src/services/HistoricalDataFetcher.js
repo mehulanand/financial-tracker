@@ -22,9 +22,16 @@ const backfillHistoricalData = async (asset, days = 2920) => {
         if (asset.type === 'CRYPTO') {
             historicalPrices = await fetchCryptoHistory(asset.symbol, days);
         } else if (asset.type === 'STOCK') {
-            // Check if Indian or US stock
+            // Check if Indian stock (.NS or .BO suffix)
             const isIndianStock = asset.symbol.includes('.NS') || asset.symbol.includes('.BO');
-            historicalPrices = await fetchStockHistory(asset.symbol, startDate, endDate);
+
+            if (isIndianStock) {
+                console.log(`⚠️  Skipping historical data for Indian stock ${asset.symbol} (NSE API doesn't provide historical data)`);
+                return; // Skip - NSE API only provides current prices
+            } else {
+                // US stocks - use Yahoo Finance
+                historicalPrices = await fetchStockHistory(asset.symbol, startDate, endDate);
+            }
         }
 
         if (historicalPrices.length === 0) {
