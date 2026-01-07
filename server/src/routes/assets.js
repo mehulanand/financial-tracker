@@ -42,8 +42,8 @@ router.post('/', authMiddleware, async (req, res) => {
         // Trigger an immediate price update check
         updatePrices();
 
-        // Backfill historical data (async, don't wait for it)
-        backfillHistoricalData(newAsset, 30).catch(err =>
+        // Backfill historical data from 2018 (async, don't wait for it)
+        backfillHistoricalData(newAsset).catch(err =>
             console.error('Historical backfill error:', err.message)
         );
 
