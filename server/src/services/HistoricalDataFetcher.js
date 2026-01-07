@@ -7,9 +7,9 @@ const prisma = new PrismaClient();
 /**
  * Fetch historical price data and populate the database
  * @param {Object} asset - The asset object from the database
- * @param {number} days - Number of days of history to fetch (default: 30)
+ * @param {number} days - Number of days of history to fetch (default: from 2018 = ~8 years)
  */
-const backfillHistoricalData = async (asset, days = 30) => {
+const backfillHistoricalData = async (asset, days = 2920) => {
     console.log(`Backfilling ${days} days of historical data for ${asset.symbol}...`);
 
     try {
