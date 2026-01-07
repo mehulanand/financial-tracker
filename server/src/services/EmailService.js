@@ -13,14 +13,14 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// Verify connection configuration
-transporter.verify(function (error, success) {
-    if (error) {
-        console.log('Email Service Error:', error);
-    } else {
-        console.log('Email Service is ready to take our messages. Port:', port, 'Secure:', secure);
-    }
-});
+// DISABLED: Email service verification (email sending is bypassed)
+// transporter.verify(function (error, success) {
+//     if (error) {
+//         console.log('Email Service Error:', error);
+//     } else {
+//         console.log('Email Service is ready to take our messages. Port:', port, 'Secure:', secure);
+//     }
+// });
 
 const sendEmail = async (to, subject, text) => {
     try {
