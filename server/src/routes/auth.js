@@ -29,9 +29,13 @@ router.post('/signup', async (req, res) => {
             }
         });
 
-        await sendEmail(email, 'Verify your account', `Your OTP is ${otp}`);
+        // TEMPORARILY DISABLED: Email sending due to Render SMTP blocking
+        // await sendEmail(email, 'Verify your account', `Your OTP is ${otp}`);
+        console.log('\n=================================');
+        console.log(`🔐 SIGNUP OTP for ${email}: ${otp}`);
+        console.log('=================================\n');
 
-        res.status(201).json({ message: 'User created. Check email for OTP.' });
+        res.status(201).json({ message: 'User created. Check Render logs for OTP.' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -72,9 +76,13 @@ router.post('/forgot-password', async (req, res) => {
             data: { otp, otpExpires }
         });
 
-        await sendEmail(email, 'Reset Password OTP', `Your OTP for password reset is ${otp}`);
+        // TEMPORARILY DISABLED: Email sending due to Render SMTP blocking
+        // await sendEmail(email, 'Reset Password OTP', `Your OTP for password reset is ${otp}`);
+        console.log('\n=================================');
+        console.log(`🔐 RESET PASSWORD OTP for ${email}: ${otp}`);
+        console.log('=================================\n');
 
-        res.json({ message: 'OTP sent to email' });
+        res.json({ message: 'OTP sent (check Render logs)' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

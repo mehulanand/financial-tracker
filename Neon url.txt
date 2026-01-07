@@ -1,1 +1,5 @@
 psql 'postgresql://neondb_owner:npg_oV2NfXmv8KlI@ep-hidden-sea-a16yzph5-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require'
+
+
+
+jwt secret key JGQEosfYKVzgLZASwuQn4R6M
