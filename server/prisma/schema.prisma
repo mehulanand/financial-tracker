@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  email       String   @unique
+  password    String
+  isVerified  Boolean  @default(false)
+  otp         String?
+  otpExpires  DateTime?
+  createdAt   DateTime @default(now())
+  assets      Asset[]
+  alerts      Alert[]
+}
+
+model Asset {
+  id          Int            @id @default(autoincrement())
+  symbol      String
+  type        String         // CRYPTO, STOCK, INDICES
+  name        String
+  userId      Int
+  user        User           @relation(fields: [userId], references: [id])
+  prices      PriceHistory[]
+  anomalies   Anomaly[]
+  createdAt   DateTime       @default(now())
+
+  @@unique([userId, symbol])
+}
+
+model PriceHistory {
+  id        Int      @id @default(autoincrement())
+  price     Float
+  timestamp DateTime @default(now())
+  assetId   Int
+  asset     Asset    @relation(fields: [assetId], references: [id])
+}
+
+model Anomaly {
+  id        Int      @id @default(autoincrement())
+  severity  String   // LOW, MEDIUM, HIGH
+  message   String
+  price     Float
+  timestamp DateTime @default(now())
+  assetId   Int
+  asset     Asset    @relation(fields: [assetId], references: [id])
+}
+
+model Alert {
+  id        Int      @id @default(autoincrement())
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model MarketAnomaly {
+  id          Int      @id @default(autoincrement())
+  symbol      String
+  type        String   // CRYPTO, STOCK
+  price       Float
+  message     String
+  severity    String
+  timestamp   DateTime @default(now())
+}
