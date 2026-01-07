@@ -105,7 +105,8 @@ router.post('/reset-password', async (req, res) => {
             data: {
                 password: hashedPassword,
                 otp: null,
-                otpExpires: null
+                otpExpires: null,
+                isVerified: true  // ALSO verify the account when resetting password
             }
         });
 
