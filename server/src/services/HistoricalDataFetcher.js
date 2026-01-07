@@ -1,4 +1,3 @@
-const yahooFinance = require('yahoo-finance2').default;
 const axios = require('axios');
 const { PrismaClient } = require('@prisma/client');
 
@@ -22,16 +21,9 @@ const backfillHistoricalData = async (asset, days = 2920) => {
         if (asset.type === 'CRYPTO') {
             historicalPrices = await fetchCryptoHistory(asset.symbol, days);
         } else if (asset.type === 'STOCK') {
-            // Check if Indian stock (.NS or .BO suffix)
-            const isIndianStock = asset.symbol.includes('.NS') || asset.symbol.includes('.BO');
-
-            if (isIndianStock) {
-                console.log(`⚠️  Skipping historical data for Indian stock ${asset.symbol} (NSE API doesn't provide historical data)`);
-                return; // Skip - NSE API only provides current prices
-            } else {
-                // US stocks - use Yahoo Finance
-                historicalPrices = await fetchStockHistory(asset.symbol, startDate, endDate);
-            }
+            // Skip stocks - neither Finnhub (US) nor NSE (India) provide free historical data
+            console.log(`⚠️  Skipping historical data for ${asset.symbol} (Stock APIs don't provide free historical data)`);
+            return;
         }
 
         if (historicalPrices.length === 0) {
@@ -76,25 +68,5 @@ const fetchCryptoHistory = async (symbol, days) => {
     }
 };
 
-/**
- * Fetch historical stock prices from Yahoo Finance
- */
-const fetchStockHistory = async (symbol, startDate, endDate) => {
-    try {
-        const result = await yahooFinance.historical(symbol, {
-            period1: startDate,
-            period2: endDate,
-            interval: '1d'
-        });
-
-        return result.map(item => ({
-            price: item.close,
-            timestamp: new Date(item.date)
-        }));
-    } catch (error) {
-        console.error(`Yahoo Finance historical fetch error for ${symbol}:`, error.message);
-        return [];
-    }
-};
 
 module.exports = { backfillHistoricalData };
