@@ -1,11 +1,24 @@
 const nodemailer = require('nodemailer');
 
+const port = process.env.EMAIL_PORT || 587;
+const secure = port == 465; // true for 465, false for 587
+
 const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST || 'smtp.ethereal.email',
-    port: process.env.EMAIL_PORT || 587,
+    port: port,
+    secure: secure,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
+    }
+});
+
+// Verify connection configuration
+transporter.verify(function (error, success) {
+    if (error) {
+        console.log('Email Service Error:', error);
+    } else {
+        console.log('Email Service is ready to take our messages. Port:', port, 'Secure:', secure);
     }
 });
 
